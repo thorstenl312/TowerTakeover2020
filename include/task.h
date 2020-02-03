@@ -1,0 +1,384 @@
+#include "vex.h"
+float o;
+int z = 0;
+int count = 0;
+bool deployOut = false;
+bool skills = false;
+bool fast = false;
+int deplo = 0;
+//Things or Multitasking
+motor_group leftDrive(FrontL, BackL);
+motor_group rightDrive(FrontR, BackR);
+motor_group roller(RollerL, RollerR);
+void accelerate(int maxSpeed,int tim = 60){
+  for(int i = 1; i<=maxSpeed/10; i++){
+    leftDrive.spin(forward,i*10,pct);
+    rightDrive.spin(forward,i*10,pct);
+    wait(tim,msec);
+  }
+  leftDrive.spin(forward,maxSpeed,pct);
+  rightDrive.spin(forward,maxSpeed,pct);
+}
+void stopDrive(brakeType b){
+  leftDrive.stop(b);
+  rightDrive.stop(b);
+}
+void rollOut(int speed){
+  roller.setStopping(hold);
+  while(dep.value(analogUnits::range12bit) >2000){
+    roller.spin(reverse, speed,pct);
+  }
+  roller.stop(hold);
+}
+int rollOut80(){
+  while(check.value(analogUnits::range12bit) >2000){
+    roller.spin(reverse, 35,pct);
+  }
+  roller.stop(hold);
+  return(0);
+}
+int rollOutDep(){
+  while(dep.value(analogUnits::range12bit) >2000){
+    roller.spin(reverse, 60,pct);
+  }
+  roller.stop(hold);
+  return(0);
+}
+int rollOut45(){
+  while(check.value(analogUnits::range12bit) >2400){
+    roller.spin(reverse, 45,pct);
+  }
+  roller.stop(hold);
+  return(0);
+}
+int rollOut60(){
+  while(check.value(analogUnits::range12bit) >2400){
+    roller.spin(reverse, 60,pct);
+  }
+  roller.stop(hold);
+  return(0);
+}
+int rollIn80(){
+  while(check.value(analogUnits::range12bit) > 2400){
+    roller.spin(forward, 80,pct);
+  }
+  roller.stop(hold);
+  return(0);
+}
+int deployIn(){
+  roller.stop(coast);
+  deploy.spin(reverse,100,velocityUnits::pct);
+  wait(300,msec);
+  while(fabs(deploy.velocity(percent))>1){
+    wait(20,msec);
+  }
+  roller.spin(forward,80,pct);
+  deploy.resetRotation();
+  wait(50,msec);
+  deploy.stop(coast);
+  
+  return(0);
+}
+void deployInF(){
+  roller.stop(coast);
+  deploy.spin(reverse,100,velocityUnits::pct);
+  wait(300,msec);
+  while(fabs(deploy.velocity(percent))>1){
+    wait(20,msec);
+  }
+  roller.spin(forward,80,pct);
+  deploy.resetRotation();
+  wait(50,msec);
+  deploy.stop(coast);
+}
+int armDown(){
+  arm.spin(reverse,200,rpm);
+      wait(250,msec);
+      roller.spin(forward,45,pct);
+      while(fabs(arm.velocity(percent))>1){
+        wait(20,msec);
+      }
+      arm.resetRotation();
+      arm.spin(forward,170,rpm);
+      wait(100,msec);
+      arm.stop(hold);
+      wait(100,msec);
+  return(0);
+}
+int armDown2(){
+  roller.stop(coast);
+  arm.spin(reverse,100,percent);
+  while(fabs(arm.velocity(percent))>1){
+    wait(20,msec);
+  }
+  roller.spin(forward,100,pct);
+  arm.spin(forward,170,rpm);
+  wait(100,msec);
+  arm.stop(hold);
+  return(0);
+}
+int rollerControl(){
+  while(true){
+    if(Controller1.ButtonR1.pressing() && arm.rotation(degrees)<200){
+      while(Controller1.ButtonR1.pressing()){
+        roller.spin(forward,100,pct);
+      }
+      roller.stop(hold);
+    }
+    else if(Controller1.ButtonR1.pressing() && arm.rotation(degrees)>200){
+      while(Controller1.ButtonR1.pressing()){
+        roller.spin(reverse,60,pct);
+      }
+      roller.stop(hold);
+    }
+    else if(Controller1.ButtonR2.pressing()){
+      while(Controller1.ButtonR2.pressing()){
+        roller.spin(reverse,100,pct);
+      }
+      roller.stop(hold);
+    }
+  }
+  return(0);
+}
+int rolle(){
+  wait(850,msec);
+  roller.stop(hold);
+  return(0);
+}
+void rollerSpin(int speed){
+  roller.spin(forward, speed, percent);
+}
+void driveSpin(int speed){
+  leftDrive.spin(forward, speed, percent);
+  rightDrive.spin(forward, speed, percent);
+}
+void deployPIDAuton(double num = 1){
+  deployOut = true;
+  double KP = 0.15*num;
+  arm.stop(hold);
+  int error = 30;
+  while(abs(error)>5){
+    stopDrive(hold);
+    error = 553 - deploy.rotation(degrees);
+    double speed = error *KP;
+    if(speed < 33) speed = 33;
+    if(speed > 60) speed = 100;
+    if(error<370) roller.stop(coast);
+    deploy.spin(forward, speed, rpm);
+    wait(15,msec);
+  }
+  deploy.stop(hold);
+  stopDrive(coast);
+}
+void deployPIDFast(double num = 1){
+  deployOut = true;
+  double KP = 0.2*num;
+  arm.stop(hold);
+  int error = 30;
+  task u(rollOutDep);
+  while(abs(error)>5){
+    stopDrive(hold);
+    error = 553 - deploy.rotation(degrees);
+    double speed = error *KP;
+    if(speed < 55) speed = 55;
+    if(speed > 55) speed = 100;
+    roller.stop(coast);
+    deploy.spin(forward, speed, rpm);
+    wait(15,msec);
+  }
+  deploy.stop(hold);
+  stopDrive(coast);
+  task::stop(u);
+}
+void deployPIDAuton2(double num = 1){
+  deployOut = true;
+  double KP = 0.15*num;
+  arm.stop(hold);
+  int error = 30;
+  while(abs(error)>5){
+    stopDrive(hold);
+    error = 553 - deploy.rotation(degrees);
+    double speed = error *KP;
+    if(speed < 30) speed = 30;
+    if(speed > 70) speed = 100;
+    if(error<395) roller.stop(coast);
+    deploy.spin(forward, speed, rpm);
+    wait(15,msec);
+  }
+  deploy.stop(hold);
+  stopDrive(coast);
+}
+int deployPIDTask(){
+  deployOut = true;
+  double KP = 0.15;
+  arm.stop(hold);
+  int error = 30;
+  while(abs(error)>5){
+    error = 553 - deploy.rotation(degrees);
+    double speed = error *KP;
+    if(speed < 40) speed = 40;
+    if(speed > 65) speed = 90;
+    if(error<370) roller.stop(coast);
+    deploy.spin(forward, speed, rpm);
+    wait(15,msec);
+  }
+  deploy.stop(hold);
+  stopDrive(coast);
+  return(0);
+}
+void deployPID(double num =1){
+  deployOut = true;
+  double KP = 0.14*num;
+  deploy.resetRotation();
+  arm.stop(hold);
+  int error = 30;
+  if(dep.value(analogUnits::range12bit) >2000) rollOut(35);
+  roller.stop(hold);
+  while(abs(error)>5){
+    stopDrive(hold);
+    error = 550 - deploy.rotation(degrees);
+    double speed = error *KP;
+    if(speed < 35) speed = 35;
+    if(speed > 68) speed = 95;
+    if(error<390) roller.stop(coast);
+    deploy.spin(forward, speed, rpm);
+    wait(15,msec);
+  }
+  deploy.stop(hold);
+  stopDrive(coast);
+}
+void deployPIDSkills(){
+  deployOut = true;
+  double KP = 0.153;
+  deploy.resetRotation();
+  arm.stop(hold);
+  int error = 30;
+  task u(rollOutDep);
+  while(abs(error)>5){
+    stopDrive(hold);
+    error = 550 - deploy.rotation(degrees);
+    double speed = error *KP;
+    if(speed < 40) speed = 40;
+    if(speed > 65) speed = 90;
+    if(error<365) roller.stop(coast);
+    deploy.spin(forward, speed, rpm);
+    wait(15,msec);
+  }
+  deploy.stop(hold);
+  stopDrive(coast);
+  task::stop(u);
+  
+}
+void deployRobot(){
+  stopDrive(hold);
+  arm.rotateFor(300,degrees,70,velocityUnits::pct);
+  arm.spin(reverse,100,pct);
+  wait(450,msec);
+  while(fabs(arm.velocity(pct))>1) wait(20,msec);
+  arm.stop(hold);
+  arm.resetRotation();
+}
+void deployRobotTask(){
+  stopDrive(hold);
+  arm.rotateFor(300,degrees,100,velocityUnits::pct);
+  arm.spin(reverse,100,pct);
+  wait(450,msec);
+  while(fabs(arm.velocity(pct))>1) wait(20,msec);
+  arm.stop(hold);
+  arm.resetRotation();
+}
+int armControl(){
+  while(true){
+    if(Controller1.ButtonY.pressing() && Controller1.ButtonL1.pressing()){
+      task e(rollOut45);
+      arm.rotateTo(420,degrees,95,velocityUnits::pct,true);
+      rollerSpin(0);
+      task::stop(e);
+    }
+    else if(Controller1.ButtonY.pressing() && Controller1.ButtonRight.pressing()){
+      task e(rollOut45);
+      arm.rotateTo(595,degrees,95,velocityUnits::pct,true);
+      rollerSpin(0);
+      task::stop(e);
+    }
+    else if(Controller1.ButtonRight.pressing()){
+      task d(rollOut45);
+      arm.rotateTo(610,degrees,95,velocityUnits::pct,true);
+      rollerSpin(0);
+      task::stop(d);
+    }
+    else if(Controller1.ButtonL1.pressing() && arm.rotation(degrees)<200){
+      task e(rollOut45);
+      arm.rotateTo(470,degrees,95,velocityUnits::pct,true);
+      rollerSpin(0);
+      task::stop(e);
+    }
+    else if(Controller1.ButtonL1.pressing() && arm.rotation(degrees)>200){
+      arm.rotateTo(610,degrees,95,velocityUnits::pct,true);
+    }
+    else if(Controller1.ButtonL2.pressing()){
+      arm.spin(reverse,140,rpm);
+      wait(250,msec);
+      roller.spin(forward,45,pct);
+      while(fabs(arm.velocity(percent))>1){
+        wait(20,msec);
+      }
+      arm.resetRotation();
+      arm.spin(forward,170,rpm);
+      wait(100,msec);
+      arm.stop(hold);
+      wait(100,msec);
+      roller.stop(coast);
+    }
+    else{
+      arm.stop(hold);
+    }
+    if(Controller1.ButtonUp.pressing()){
+      while(Controller1.ButtonUp.pressing()){
+        deploy.spin(forward,35,rpm);
+      }
+      deploy.stop(hold);
+    }
+    else if(Controller1.ButtonB.pressing()){
+      if(deployOut){
+        deployOut = false;
+        roller.stop(coast);
+        deploy.spin(reverse,75,velocityUnits::pct);
+        wait(300,msec);
+        while(fabs(deploy.velocity(percent))>1){
+          wait(20,msec);
+        }
+        deploy.resetRotation();
+        wait(50,msec);
+        deploy.spin(forward,75,velocityUnits::pct);
+        wait(100,msec);
+        deploy.stop(coast);
+      }
+      else{
+        if(skills){
+          deployPIDSkills();
+        } 
+        else deployPID();
+      }
+      
+    }
+    else if(Controller1.ButtonDown.pressing()){
+      deployPIDFast();
+    }
+    if(Controller1.ButtonLeft.pressing()){
+      while(Controller1.ButtonLeft.pressing()){
+        deploy.spin(reverse,35,rpm);
+      }
+      deploy.stop(coast);
+    }
+  }
+  return(0);
+}
+void intakeStack(){
+  rollerSpin(-40);
+  driveSpin(40);
+  wait(150,msec);
+  driveSpin(80);
+  rollerSpin(100);
+  wait(400,msec);
+}

@@ -31,15 +31,12 @@ void autonomous(void) {
   //rollerSpin(-80);
   task Odom(trackPosition);
   resetPosition();
-  x=0; y=0; q=0;
   task check(debug);
   resetPosition();
   deploy.stop(coast);
-  if(b==1) Blue2(); //Blue Side, 1 cube goal
-  if(b==2) Blue2(); //Blue Side, 1 cube goal
-  if(b==3) Red2(); //Red Side, 1 cube goal
-  if(b==5) Skills(); //Skills
-  if(b==9) Blue9(); //Skills
+  if(skills) Skills();
+  else Auton();
+
 }
 void usercontrol(void) {
   stopDrive(hold);
@@ -56,7 +53,6 @@ void usercontrol(void) {
     num = 0.8;
   } 
   roller.setMaxTorque(100,percent);
-  deploy.resetRotation();
   while (true) {
     double xAxis = Controller1.Axis2.position(percent), yAxis = Controller1.Axis3.position(percent);
     if(fabs(xAxis)<5) xAxis = 0; //Deadzone

@@ -221,7 +221,7 @@ void positiveXBackward(float pos,int maxPower = 75, int tim = 150) {
 	//Stops motor to ensure accuracy
   stopDrive(coast);
 }
-void turnRightO9(float pos, int tim = 100) {
+void turnRightO9(float pos, int tim = 100, int maxSpeed = 50) {
 	float error = 300, lasterror = pos, totalerror = 0, t=0, Power= 10;
   //Clears the encoder
 	while (error>3) {
@@ -233,7 +233,7 @@ void turnRightO9(float pos, int tim = 100) {
 		float derivative = error - lasterror;
 		float P = error * kpOC*1.05, D = derivative * kdOC, I = totalerror * kiOC;
     Power=P+I+D;
-    if(Power>=50)Power=50;
+    if(Power>=maxSpeed)Power=maxSpeed;
 		FrontL.spin(forward, Power, percent);
 		BackL.spin(forward, Power, percent);
     FrontR.spin(reverse, Power, percent);

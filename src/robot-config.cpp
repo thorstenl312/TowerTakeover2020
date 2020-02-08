@@ -8,21 +8,22 @@ using code = vision::code;
 brain  Brain;
 
 // VEXcode device constructors
-motor FrontL = motor(PORT14, ratio18_1, false);
-motor FrontR = motor(PORT20, ratio18_1, true);
-motor BackL = motor(PORT11, ratio18_1, false);
-motor BackR = motor(PORT19, ratio18_1, true);
-motor arm = motor(PORT4, ratio18_1, true);
-motor deploy = motor(PORT12, ratio36_1, false);
-encoder encoderL = encoder(Brain.ThreeWirePort.G);
-encoder encoderY = encoder(Brain.ThreeWirePort.A);
-encoder encoderR = encoder(Brain.ThreeWirePort.C);
-motor RollerR = motor(PORT17, ratio18_1, true);
-motor RollerL = motor(PORT7, ratio18_1, false);
+motor FrontL = motor(PORT10, ratio18_1, false);
+motor deploy = motor(PORT9, ratio36_1, false);
+motor arm = motor(PORT16, ratio18_1, true);
+motor BackR = motor(PORT20, ratio18_1, true);
+motor BackL = motor(PORT19, ratio18_1, false);
+motor FrontR = motor(PORT17, ratio18_1, true);
+motor RollerL = motor(PORT14, ratio18_1, false);
+motor RollerR = motor(PORT11, ratio18_1, true);
+
+encoder encoderL = encoder(Brain.ThreeWirePort.C);
+encoder encoderY = encoder(Brain.ThreeWirePort.E);
+encoder encoderR = encoder(Brain.ThreeWirePort.A);
+
 controller Controller1 = controller(primary);
-inertial inert = inertial(PORT11);
-line check = line(Brain.ThreeWirePort.E);
-line dep = line(Brain.ThreeWirePort.F);
+line check = line(Brain.ThreeWirePort.G);
+line dep = line(Brain.ThreeWirePort.H);
 // VEXcode generated functions
 
 

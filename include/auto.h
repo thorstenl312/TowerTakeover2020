@@ -1,4 +1,254 @@
 #include "spline.h"
+bool Red1 = false;
+void Auton(){
+  deployRobotTask();
+  arm.spin(reverse,100,rpm);
+  wait(300,msec);
+  arm.stop(hold);
+  roller.spin(forward,100,pct);
+  positiveYForward(23,60,30);
+  arm.rotateFor(180, rotationUnits::deg,100, velocityUnits::pct,false);
+  positiveYForward(26,45,30);
+  while(arm.rotation(degrees)>30){
+    arm.spin(reverse,200,rpm);
+  }
+  while(fabs(arm.velocity(pct))>1) wait(20,msec);
+  arm.stop(hold);
+  arm.resetRotation();
+  if(Red1==false){
+    splineLeft(30, -11, 200, 30);
+  } 
+  else{
+    splineRight(-30, 11, 200, 30);
+  }
+  positiveYForward(44,60,30);
+  rollerSpin(100);
+  negativeYBackward(18.7,70,30);
+  if(Red1==false){
+    turnLeftO9(-127.5);
+  }
+  else{
+    turnRightO9(127.5);
+  }
+  roller.spin(forward,100,pct);
+  accelerate(100,30);
+  wait(250,msec);
+  stopDrive(coast);
+  while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
+  roller.stop(hold);
+  deploy.spin(forward,100,pct);
+  rollOut(40);
+  stopDrive(hold);
+  deployPIDAuton(0.8);
+  wait(100,msec);
+  rollerSpin(-100);
+  driveSpin(-25);
+  wait(250,msec);
+  driveSpin(-45);
+  wait(400,msec);
+}
+
+
+
+
+void Skills(){
+  stopDrive(hold);
+  deployRobot();
+  wait(500,msec);
+  roller.stop(coast);
+  //Score First Cube in Tower
+  arm.spin(reverse,70,pct);
+  wait(300,msec);
+  arm.stop(hold);
+  arm.resetRotation();
+  q=0;
+  wait(200,msec);
+  task a(rollIn80);
+  positiveYForward(8,45,30);
+  turnLeftO(-42.15,30);
+  task::stop(a);
+  arm.rotateTo(480,degrees,90,velocityUnits::pct,false);
+  wait(200,msec);
+  negativeXForward(-10.8, 50, 30);
+  RollerL.rotateFor(-500,degrees,60, velocityUnits::pct,false);
+  RollerR.rotateFor(-500,degrees,60, velocityUnits::pct,true);
+  positiveXBackward(-2.5,50,30);
+  task ar(armDown);
+
+  //Get First Line of Cubes
+  turnRightO(-0.5,50,45);
+  rollerSpin(100);
+  positiveYForward(39,50,30);
+  task::stop(ar);
+  turnRightO(17.8,30);
+  positiveYForward(49,45,30);
+
+  //Put 2nd Cube in Tower
+  negativeYBackward(44,45,30);
+  turnLeftO(12.5,60);
+  wait(150,msec);
+  rollerSpin(0);
+  task e(rollOut80);
+  arm.rotateTo(510,degrees,85,velocityUnits::pct,true);
+  wait(100,msec);
+  RollerL.rotateFor(-700,degrees,60, velocityUnits::pct,false);
+  RollerR.rotateFor(-700,degrees,60, velocityUnits::pct,true);
+  task a2(armDown);
+  wait(300,msec);
+
+  //Get 2nd Line of Cubes
+  turnLeftO(-60,30);
+  negativeXForward(-7.3,35);
+  turnRightO(-2.1,40,30);
+  rollerSpin(100);
+  positiveYForward(108.5,55,30);
+  positiveYForward(112,40,30);
+  rollerSpin(0);
+  wait(50,msec);
+  rollerSpin(100);
+  wait(50,msec);
+  rollerSpin(0);
+  wait(50,msec);
+  rollerSpin(100);
+  wait(500,msec);
+  accelerate(40);
+  while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
+  stopDrive(coast);
+  wait(150,msec);
+  resetPosition();
+  wait(250, msec);
+  negativeYBackward(-8,45,30);
+  task::stop(ar);
+
+  //Get 3rd Cube in Tower
+  task g(rollOut45);
+  arm.rotateTo(480,degrees,100,velocityUnits::pct,true);
+  task::stop(g);
+  turnLeftO9(-83,30);
+  waitUntil(fabs(FrontL.velocity(percent))<1);
+  RollerL.rotateFor(-500,degrees,60, velocityUnits::pct,false);
+  RollerR.rotateFor(-500,degrees,60, velocityUnits::pct,true);
+  positiveXBackward(0.5,35,30);
+  task a3(armDown);
+  wait(200,msec);
+
+  //Deploy Cubes in Goal
+  turnRightO(-51.8,60,40);
+  rollerSpin(60);
+  arm.stop(hold);
+  task::stop(a3);
+  accelerate(100);
+  arm.stop(hold);
+  wait(400,msec);
+  stopDrive(coast);
+  while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
+  arm.stop(hold);
+  task ll(deployPIDTask);
+  rollOut(40);
+  arm.stop(hold);
+  stopDrive(hold);
+  task::stop(ll);
+  stopDrive(hold);
+  deployPIDAuton(1);
+  arm.stop(hold);
+  wait(100,msec);
+  rollerSpin(-100);
+  driveSpin(10);
+  wait(270,msec);
+  driveSpin(-25);
+  wait(470,msec);
+  driveSpin(0);
+  rollerSpin(0);
+  deployInF();
+
+  //Go for 4th cube in Tower
+  negativeYBackward(-5,45,60);
+  turnRightO(91,30,35);
+  rollerSpin(70);
+  positiveXForward(28.5,50,30);
+  stopDrive(hold);
+  wait(150,msec);
+  negativeXBackward(24.6,45,30);
+  stopDrive(hold);
+  task z(rollOut80);
+  wait(150,msec);
+  arm.rotateTo(610,degrees,100,velocityUnits::pct);
+  task::stop(z);
+  positiveXForward(27,45,30);
+  stopDrive(hold);
+  RollerL.rotateFor(-700,degrees,65, velocityUnits::pct,false);
+  RollerR.rotateFor(-700,degrees,65, velocityUnits::pct,true);
+  negativeYBackward(25,45,30);
+  stopDrive(hold);
+  turnRightO(185,60,35);
+  driveSpin(-50);
+  wait(250,msec);
+  task a4(armDown);
+  while(fabs(BackR.velocity(rpm)) > 5 && fabs(BackL.velocity(rpm)) > 5) wait(20,msec);
+  stopDrive(coast);
+  wait(150,msec);  
+  resetPosition();
+  driveSpin(0);
+  wait(250,msec);
+  task::stop(a4);
+  arm.stop(hold);
+  
+  //Go For 2nd Line of Cubes (STATE)
+  rollerSpin(100);
+  while(fabs(BackR.velocity(rpm)) > 5 && fabs(BackL.velocity(rpm)) > 5) wait(20,msec);
+  driveSpin(0);
+  positiveYForward(110,60,30);
+  //Place 5th Cube in Tower
+  turnLeftO(-90,30,40);
+  rollerSpin(70);
+  positiveXForward(8,50,30);
+  stopDrive(hold);
+  wait(150,msec);
+  negativeXBackward(4,45,30);
+  stopDrive(hold);
+  task zO(rollOut80);
+  wait(150,msec);
+  arm.rotateTo(610,degrees,100,velocityUnits::pct);
+  task::stop(zO);
+  positiveXForward(7,45,30);
+  stopDrive(hold);
+  RollerL.rotateFor(-700,degrees,65, velocityUnits::pct,false);
+  RollerR.rotateFor(-700,degrees,65, velocityUnits::pct,true);
+
+  //Deploy Stack In Goal
+  task k(armDown);
+  negativeXForward(-50,55,30);
+  rollerSpin(60);
+  //task::stop(k);
+  turnRightO(45,50,40);
+  accelerate(80,30);
+  wait(400,msec);
+  stopDrive(coast);
+  while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
+  arm.stop(hold);
+  task lk(deployPIDTask);
+  rollOut(40);
+  arm.stop(hold);
+  stopDrive(hold);
+  task::stop(lk);
+  stopDrive(hold);
+  deployPIDAuton(1);
+  wait(50,msec);
+  driveSpin(15);
+  rollerSpin(-100);
+  wait(250,msec);
+  driveSpin(-30);
+  wait(600,msec);
+  driveSpin(0);
+  rollerSpin(0);
+}
+
+
+
+
+
+
+
 void Red2(){
   deployRobotTask();
   //deployRobot();
@@ -29,52 +279,15 @@ void Red2(){
   task::stop(l);
   deployPIDAuton(0.90);
   rollerSpin(-100);
+  driveSpin(12);
   wait(130,msec);
   leftDrive.setStopping(coast);
   rightDrive.setStopping(coast);
   driveSpin(-25);
-  wait(20,msec);
+  wait(250,msec);
   driveSpin(-45);
   wait(400,msec);
 }
-void Blue9(){
-  deployRobotTask();
-  //deployRobot();
-  arm.spin(reverse,100,pct);
-  wait(400,msec);
-  arm.stop(hold);
-  roller.spin(forward,100,pct);
-  positiveYForward(26.5,60,30);
-  arm.rotateFor(150, rotationUnits::deg,100, velocityUnits::pct,false);
-  positiveYForward(31,60,30);
-  arm.spin(reverse, 100, percent);
-  wait(250,msec);
-  arm.stop(hold);
-  negativeYBackward(28,65,30);
-  splineLeft(40, -7, 200, 30);
-  positiveYForward(42,47,30);
-  rollerSpin(100);
-  negativeYBackward(18,70,30);
-  turnLeftO9(-130,30,65);
-  accelerate(100,30);
-  wait(250,msec);
-  stopDrive(coast);
-  while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
-  roller.stop(hold);
-  task l(deployPIDTask);
-  rollOut(40);
-  stopDrive(hold);
-  task::stop(l);
-  deployPIDAuton(1.05);
-  rollerSpin(-100);
-  wait(100,msec);
-  leftDrive.setStopping(coast);
-  rightDrive.setStopping(coast);
-  driveSpin(-25);
-  wait(250,msec);
-  driveSpin(-45);
-  wait(400,msec);
-} 
 void Blue2(){
   deployRobotTask();
   //deployRobot();
@@ -104,11 +317,12 @@ void Blue2(){
   task::stop(l);
   deployPIDAuton(0.90);
   rollerSpin(-100);
+  driveSpin(12);
   wait(130,msec);
   leftDrive.setStopping(coast);
   rightDrive.setStopping(coast);
   driveSpin(-25);
-  wait(200,msec);
+  wait(250,msec);
   driveSpin(-45);
   wait(400,msec);
 }
@@ -178,197 +392,4 @@ void Red4(){
   driveSpin(-45);
   wait(400,msec);
   stopDrive(coast);
-}
-void Skills(){
-  stopDrive(hold);
-  deployRobot();
-  wait(700,msec);
-  roller.stop(coast);
-  //Score First Cube in Tower
-  arm.spin(reverse,70,pct);
-  wait(400,msec);
-  arm.stop(hold);
-  arm.resetRotation();
-  q=0;
-  wait(200,msec);
-  task a(rollIn80);
-  positiveYForward(8,45,30);
-  turnLeftO(-42.15,30);
-  task::stop(a);
-  arm.rotateTo(480,degrees,90,velocityUnits::pct,false);
-  wait(200,msec);
-  negativeXForward(-10.8, 45, 30);
-  RollerL.rotateFor(-500,degrees,60, velocityUnits::pct,false);
-  RollerR.rotateFor(-500,degrees,60, velocityUnits::pct,true);
-  positiveXBackward(-2.5,50,30);
-  task ar(armDown);
-
-  //Get First Line of Cubes
-  turnRightO(-0.5,50,45);
-  rollerSpin(100);
-  positiveYForward(39,50,30);
-  task::stop(ar);
-  turnRightO(17.8,30);
-  positiveYForward(49,45,30);
-
-  //Put 2nd Cube in Tower
-  negativeYBackward(44,45,30);
-  turnLeftO(12.5,60);
-  wait(150,msec);
-  rollerSpin(0);
-  task e(rollOut80);
-  arm.rotateTo(510,degrees,75,velocityUnits::pct,true);
-  wait(250,msec);
-  RollerL.rotateFor(-700,degrees,60, velocityUnits::pct,false);
-  RollerR.rotateFor(-700,degrees,60, velocityUnits::pct,true);
-  wait(100,msec);
-  task a2(armDown);
-  wait(300,msec);
-
-  //Get 2nd Line of Cubes
-  turnLeftO(-60,30);
-  negativeXForward(-7.3,35);
-  turnRightO(-2.1,40,30);
-  rollerSpin(100);
-  positiveYForward(108.5,55,30);
-  positiveYForward(112,40,30);
-  rollerSpin(0);
-  wait(50,msec);
-  rollerSpin(100);
-  wait(50,msec);
-  rollerSpin(0);
-  wait(50,msec);
-  rollerSpin(100);
-  wait(1500,msec);
-  driveSpin(60);
-  while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
-  stopDrive(hold);
-  resetPosition();
-  wait(250, msec);
-  negativeYBackward(-8,40,30);
-  task::stop(ar);
-
-  //Get 3rd Cube in Tower
-  task g(rollOut45);
-  arm.rotateTo(480,degrees,100,velocityUnits::pct,true);
-  task::stop(g);
-  turnLeftO9(-83,30);
-  waitUntil(fabs(FrontL.velocity(percent))<1);
-  RollerL.rotateFor(-500,degrees,60, velocityUnits::pct,false);
-  RollerR.rotateFor(-500,degrees,60, velocityUnits::pct,true);
-  positiveXBackward(0.5,35,30);
-  task a3(armDown);
-  wait(200,msec);
-
-  //Deploy Cubes in Goal
-  turnRightO(-51.8,60,40);
-  rollerSpin(60);
-  arm.stop(hold);
-  task::stop(a3);
-  accelerate(100);
-  arm.stop(hold);
-  wait(400,msec);
-  stopDrive(coast);
-  while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
-  arm.stop(hold);
-  task ll(deployPIDTask);
-  rollOut(40);
-  arm.stop(hold);
-  stopDrive(hold);
-  task::stop(ll);
-  stopDrive(hold);
-  deployPIDAuton(1);
-  arm.stop(hold);
-  wait(100,msec);
-  rollerSpin(-100);
-  driveSpin(10);
-  wait(270,msec);
-  driveSpin(-25);
-  wait(470,msec);
-  driveSpin(0);
-  rollerSpin(0);
-  deployInF();
-
-  //Go for 4th cube in Tower
-  negativeYBackward(-5,45,60);
-  turnRightO(91,30,35);
-  rollerSpin(70);
-  positiveXForward(28.5,50,30);
-  stopDrive(hold);
-  wait(150,msec);
-  negativeXBackward(24.6,45,30);
-  stopDrive(hold);
-  task z(rollOut80);
-  wait(150,msec);
-  arm.rotateTo(610,degrees,100,velocityUnits::pct);
-  task::stop(z);
-  positiveXForward(27,45,30);
-  stopDrive(hold);
-  RollerL.rotateFor(-700,degrees,65, velocityUnits::pct,false);
-  RollerR.rotateFor(-700,degrees,65, velocityUnits::pct,true);
-  negativeYBackward(25,45,30);
-  stopDrive(hold);
-  turnRightO(180,60,35);
-  driveSpin(-100);
-  wait(250,msec);
-  task a4(armDown);
-  while(fabs(BackR.velocity(rpm)) > 5 && fabs(BackL.velocity(rpm)) > 5) wait(20,msec);
-  wait(250,msec);
-  resetPosition();
-  driveSpin(0);
-  wait(250,msec);
-  task::stop(a4);
-  arm.stop(hold);
-  
-  //Go For 2nd Line of Cubes (STATE)
-  rollerSpin(100);
-  arm.stop(hold);
-  driveSpin(60);
-  wait(250,msec);
-  while(fabs(BackR.velocity(rpm)) > 5 && fabs(BackL.velocity(rpm)) > 5) wait(20,msec);
-  driveSpin(0);
-  positiveYBackward(115,60,30);
-  //Place 5th Cube in Tower
-  turnLeftO(-90,30);
-  rollerSpin(70);
-  positiveXForward(8,50,30);
-  stopDrive(hold);
-  wait(150,msec);
-  negativeXBackward(4,45,30);
-  stopDrive(hold);
-  task zO(rollOut80);
-  wait(150,msec);
-  arm.rotateTo(610,degrees,100,velocityUnits::pct);
-  task::stop(zO);
-  positiveXForward(7,45,30);
-  stopDrive(hold);
-  RollerL.rotateFor(-700,degrees,65, velocityUnits::pct,false);
-  RollerR.rotateFor(-700,degrees,65, velocityUnits::pct,true);
-
-  //Deploy Stack In Goal
-  task k(armDown);
-  negativeXForward(-50,55,30);
-  rollerSpin(60);
-  //task::stop(k);
-  turnRightO(45,50,40);
-  accelerate(80,30);
-  wait(400,msec);
-  stopDrive(coast);
-  while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
-  arm.stop(hold);
-  task lk(deployPIDTask);
-  rollOut(40);
-  arm.stop(hold);
-  stopDrive(hold);
-  task::stop(lk);
-  stopDrive(hold);
-  deployPIDAuton(1);
-  wait(50,msec);
-  driveSpin(15);
-  rollerSpin(-100);
-  wait(250,msec);
-  driveSpin(-30);
-  wait(600,msec);
-  driveSpin(0);
-  rollerSpin(0);
 }

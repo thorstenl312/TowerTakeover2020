@@ -12,7 +12,8 @@
 using namespace vex;
 float exponent=1.4;
 double num = 1;
-int b=1; //Auton Selection based on number
+double accel = 1.5;
+int b=5; //Auton Selection based on number
 competition Competition;
 
 void pre_auton(void) {
@@ -88,8 +89,11 @@ void usercontrol(void) {
       rightDrive.spin(forward, B*0.5, percent);
     }
     else if((A<=0 && B<=0) || (A>=0 && B>=0)){
-      /*else*/ leftDrive.spin(forward, A*num, percent);
-      /*else*/ rightDrive.spin(forward, B*num, percent);
+      leftDrive.spin(forward, A*num, percent);
+      rightDrive.spin(forward, B*num, percent);
+    }
+    else if((A<=0 && B<=0)){
+
     }
     if(A==0) leftDrive.stop(coast);
     if(B==0) rightDrive.stop(coast);

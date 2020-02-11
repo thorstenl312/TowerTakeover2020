@@ -154,7 +154,7 @@ void driveSpin(int speed){
 }
 void deployPIDAuton(double num = 1){
   deployOut = true;
-  double KP = 0.30*num;
+  double KP = 0.225*num;
   arm.stop(hold);
   int error = 30;
   if(dep.value(analogUnits::range12bit) >2000) rollOut(35);
@@ -165,7 +165,7 @@ void deployPIDAuton(double num = 1){
     double speed = error *KP;
     if(speed < 30) speed = 30;
     //else if (speed<30) speed = 50;
-    if(error<370) roller.stop(coast);
+    if(error<400) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }
@@ -192,42 +192,6 @@ void deployPIDFast(double num = 1){
   stopDrive(coast);
   task::stop(u);
 }
-void deployPIDAuton2(double num = 1){
-  deployOut = true;
-  double KP = 0.15*num;
-  arm.stop(hold);
-  int error = 30;
-  while(abs(error)>5){
-    stopDrive(hold);
-    error = 553 - deploy.rotation(degrees);
-    double speed = error *KP;
-    if(speed < 30) speed = 30;
-    if(speed > 70) speed = 100;
-    if(error<395) roller.stop(coast);
-    deploy.spin(forward, speed, rpm);
-    wait(15,msec);
-  }
-  deploy.stop(hold);
-  stopDrive(coast);
-}
-int deployPIDTask(){
-  deployOut = true;
-  double KP = 0.3;
-  arm.stop(hold);
-  int error = 30;
-  while(abs(error)>5){
-    error = 750 - deploy.rotation(degrees);
-    double speed = error *KP;
-    if(speed < 40) speed = 40;
-    if(speed > 65) speed = 100;
-    if(error<370) roller.stop(coast);
-    deploy.spin(forward, speed, rpm);
-    wait(15,msec);
-  }
-  deploy.stop(hold);
-  stopDrive(coast);
-  return(0);
-}
 void deployPID(double num =1){
   deployOut = true;
   double KP = 0.18*num;
@@ -250,25 +214,24 @@ void deployPID(double num =1){
   stopDrive(coast);
 }
 void deployPIDSkills(){
-  deployOut = true;
-  double KP = 0.153;
+  double KP = 0.2;
   deploy.resetRotation();
   arm.stop(hold);
   int error = 30;
-  task u(rollOutDep);
+  task i(rollOut80);
   while(abs(error)>5){
-    stopDrive(hold);
-    error = 550 - deploy.rotation(degrees);
+    error = 750 - deploy.rotation(degrees);
     double speed = error *KP;
     if(speed < 40) speed = 40;
-    if(speed > 65) speed = 90;
-    if(error<365) roller.stop(coast);
+    if(speed>80) speed = 100;
+    if(error<410) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }
+  task::stop(i);
+  deployOut = true;
   deploy.stop(hold);
-  stopDrive(coast);
-  task::stop(u);
+  
 }
 void deployRobot(){
   stopDrive(hold);

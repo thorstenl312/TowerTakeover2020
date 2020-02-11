@@ -89,14 +89,13 @@ void usercontrol(void) {
       rightDrive.spin(forward, B*0.5, percent);
     }
     else if((A<=0 && B<=0) || (A>=0 && B>=0)){
-      leftDrive.spin(forward, A*num, percent);
-      rightDrive.spin(forward, B*num, percent);
+      if(fabs(A) > fabs(leftDrive.velocity(pct)) && fabs(leftDrive.velocity(pct)) != 0) leftDrive.spin(forward,leftDrive.velocity(pct)*accel,pct);
+      else if(fabs(A) > fabs(leftDrive.velocity(pct)) && fabs(leftDrive.velocity(pct)) == 0) leftDrive.spin(forward,A/fabs(A) * 5,rpm);
+      else leftDrive.spin(forward,A*num,pct);
+      if(fabs(B) > fabs(rightDrive.velocity(pct)) && fabs(rightDrive.velocity(pct)) != 0) rightDrive.spin(forward,rightDrive.velocity(pct)*accel,pct);
+      else if(fabs(B) > fabs(rightDrive.velocity(pct)) && fabs(rightDrive.velocity(pct)) == 0) rightDrive.spin(forward,B/fabs(B) * 5,rpm);
+      else rightDrive.spin(forward,B*num,pct);
     }
-    else if((A<=0 && B<=0)){
-
-    }
-    if(A==0) leftDrive.stop(coast);
-    if(B==0) rightDrive.stop(coast);
     if(Controller1.ButtonA.pressing()) intakeStack();
     }
     wait(20, msec);

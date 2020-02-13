@@ -214,7 +214,7 @@ void deployPID(double num =1){
   stopDrive(coast);
 }
 void deployPIDSkills(){
-  double KP = 0.2;
+  double KP = 0.225;
   deploy.resetRotation();
   arm.stop(hold);
   int error = 30;
@@ -283,22 +283,23 @@ int armControl(){
       }
       while(fabs(arm.velocity(pct))>1) wait(20,msec);
       arm.resetRotation();
-      arm.spin(forward,170,rpm);
-      wait(100,msec);
+      arm.spin(forward,200,rpm);
+      wait(120,msec);
       arm.stop(hold);
       wait(100,msec);
       roller.stop(coast);
     }
-    else if(Controller1.ButtonY.pressing()){
+    else if(Controller1.ButtonDown.pressing()){
       rollerSpin(100);
-      arm.rotateFor(180, rotationUnits::deg,100, velocityUnits::pct,false);
-      wait(150, msec);
+      arm.rotateFor(180, rotationUnits::deg,100, velocityUnits::pct,true);
+      wait(150,msec);
       while(arm.rotation(degrees)>30){
-        arm.spin(reverse,200,rpm);
+        arm.spin(reverse,150,rpm);
       }
       while(fabs(arm.velocity(pct))>1) wait(20,msec);
       arm.stop(hold);
       arm.resetRotation();
+      rollerSpin(0);
     }
     else{
       arm.stop(hold);
@@ -331,9 +332,6 @@ int armControl(){
         else deployPID();
       }
       
-    }
-    else if(Controller1.ButtonDown.pressing()){
-      deployPIDFast();
     }
     if(Controller1.ButtonLeft.pressing()){
       while(Controller1.ButtonLeft.pressing()){

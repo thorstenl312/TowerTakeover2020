@@ -20,7 +20,7 @@ void positiveYForward(float pos, int maxPower = 75, int tim = 150) {
 		float derivative = error - lasterror;
 		float P = error * kpO, D = derivative * kdO, I = totalerror * kiO;
     speed=P+I+D;
-    if((speed-FrontL.velocity(percent))>=15 && error>100) speed=FrontL.velocity(percent)+15; //Acceleration 
+    if((speed-FrontL.velocity(percent))>=10 && error>100) speed=FrontL.velocity(percent)+10; //Acceleration 
     if(speed>=maxPower)speed=maxPower;
 		FrontR.spin(forward, speed, percent); //Give Power to Motors
 		BackR.spin(forward, speed, percent);
@@ -46,7 +46,7 @@ void negativeYForward(float pos, int maxPower = 75, int tim = 150) {
 		float derivative = error - lasterror;
 		float P = error * kpO, D = derivative * kdO, I = totalerror * kiO;
     speed=P+I+D;
-    if((speed-FrontL.velocity(percent))>=15 && error>100) speed=FrontL.velocity(percent)+15; //Acceleration 
+    if((speed-FrontL.velocity(percent))>=10 && error>100) speed=FrontL.velocity(percent)+10; //Acceleration 
     if(speed>=maxPower)speed=maxPower;
 		FrontR.spin(forward, speed, percent); //Give Power to Motors
 		BackR.spin(forward, speed, percent);
@@ -72,7 +72,7 @@ void negativeYBackward(float pos,int maxPower = 75, int tim = 150) {
 		float derivative = error - lasterror;
 		float P = error * kpO, D = derivative * kdO, I = totalerror * kiO;
     speed=P+I+D;
-    if(speed-(fabs(FrontL.velocity(percent)))>=15 && error>100) speed=fabs(FrontL.velocity(percent))+15; //Acceleration 
+    if(speed-(fabs(FrontL.velocity(percent)))>=10 && error>100) speed=fabs(FrontL.velocity(percent))+10; //Acceleration 
     if(speed>=maxPower)speed=maxPower;
 		FrontR.spin(reverse, speed, percent);
 		BackR.spin(reverse, speed, percent);
@@ -99,7 +99,7 @@ void positiveYBackward(float pos,int maxPower = 75, int tim = 150) {
 		float derivative = error - lasterror;
 		float P = error * kpO, D = derivative * kdO, I = totalerror * kiO;
     speed=P+I+D;
-    if(speed-(fabs(FrontL.velocity(percent)))>=15 && error>100) speed=fabs(FrontL.velocity(percent))+15; //Acceleration 
+    if(speed-(fabs(FrontL.velocity(percent)))>=10 && error>100) speed=fabs(FrontL.velocity(percent))+10; //Acceleration 
     if(speed>=maxPower)speed=maxPower;
 		FrontR.spin(reverse, speed, percent);
 		BackR.spin(reverse, speed, percent);
@@ -126,7 +126,7 @@ void positiveXForward(float pos, int maxPower = 75, int tim = 150) {
 		float derivative = error - lasterror;
 		float P = error * kpO, D = derivative * kdO, I = totalerror * kiO;
     speed=P+I+D;
-    if((speed-FrontL.velocity(percent))>=15 && error>100) speed=FrontL.velocity(percent)+15; //Acceleration 
+    if((speed-FrontL.velocity(percent))>=10 && error>100) speed=FrontL.velocity(percent)+10; //Acceleration 
     if(speed>=maxPower)speed=maxPower;
     turnCorrection = (encoderL.rotation(deg) - encoderR.rotation(deg)); //Anti-Strafe
 		FrontR.spin(forward, speed, percent); //Give Power to Motors
@@ -153,7 +153,7 @@ void negativeXForward(float pos, int maxPower = 75, int tim = 150) {
 		float derivative = error - lasterror;
 		float P = error * kpO, D = derivative * kdO, I = totalerror * kiO;
     speed=P+I+D;
-    if((speed-FrontL.velocity(percent))>=15 && error>100) speed=FrontL.velocity(percent)+15; //Acceleration 
+    if((speed-FrontL.velocity(percent))>=10 && error>100) speed=FrontL.velocity(percent)+10; //Acceleration 
     if(speed>=maxPower)speed=maxPower;
 		FrontR.spin(forward, speed, percent); //Give Power to Motors
 		BackR.spin(forward, speed, percent);
@@ -179,7 +179,7 @@ void negativeXBackward(float pos,int maxPower = 75, int tim = 150) {
 		float derivative = error - lasterror;
 		float P = error * kpO, D = derivative * kdO, I = totalerror * kiO;
     speed=P+I+D;
-    if(speed-(fabs(FrontL.velocity(percent)))>=15 && fabs(error)>300) speed=fabs(FrontL.velocity(percent))+15; //Acceleration 
+    if(speed-(fabs(FrontL.velocity(percent)))>=10 && fabs(error)>300) speed=fabs(FrontL.velocity(percent))+10; //Acceleration 
     if(speed>=maxPower)speed=maxPower;
 		FrontR.spin(reverse, speed, percent);
 		BackR.spin(reverse, speed , percent);
@@ -206,7 +206,7 @@ void positiveXBackward(float pos,int maxPower = 75, int tim = 150) {
 		float derivative = error - lasterror;
 		float P = error * kpO, D = derivative * kdO, I = totalerror * kiO;
     speed=P+I+D;
-    if(speed-(fabs(FrontL.velocity(percent)))>=15 && error>100) speed=fabs(FrontL.velocity(percent))+15; //Acceleration 
+    if(speed-(fabs(FrontL.velocity(percent)))>=10 && error>100) speed=fabs(FrontL.velocity(percent))+10; //Acceleration 
     if(speed>=maxPower)speed=maxPower;
 		FrontR.spin(reverse, speed , percent);
 		BackR.spin(reverse, speed , percent);

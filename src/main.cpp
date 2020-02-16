@@ -45,16 +45,18 @@ void usercontrol(void) {
   roller.setStopping(hold);
   Brain.Screen.clearScreen();
   Brain.Screen.setFont(mono15); //Makes font on brain smaller to allow for space
+  if(skills){
+    deployRobotTask();
+    num = 0.75;
+  } 
   task chweck(debug);
   task od(trackPosition);
   task ar(armControl);
   task r(rollerControl);
-  if(skills){
-    deployRobotTask();
-    num = 0.8;
-  } 
   roller.setMaxTorque(100,percent);
   while (true) {
+    leftDrive.setStopping(coast);
+    rightDrive.setStopping(coast);
     double xAxis = Controller1.Axis2.position(percent), yAxis = Controller1.Axis3.position(percent);
     if(fabs(xAxis)<5) xAxis = 0; //Deadzone
     if(fabs(yAxis)<5) yAxis = 0; 
@@ -84,18 +86,25 @@ void usercontrol(void) {
       }
     }
     else{
-    if((A<0 && B>0) || (A>0 && B<0)){
-      leftDrive.spin(forward, A*0.5, percent); //Drive Control
-      rightDrive.spin(forward, B*0.5, percent);
+      if((A<0 && B>0) || (A>0 && B<0)){
+        leftDrive.spin(forward, A*0.45, percent); //Drive Control
+        rightDrive.spin(forward, B*0.45, percent);
+      }
+      else if((A<=0 && B<=0) || (A>=0 && B>=0)){
+        /*if(A==0) leftDrive.stop(coast);
+        else if(fabs(A)>fabs(leftDrive.velocity(pct)) && fabs(leftDrive.velocity(pct))<12) leftDrive.spin(forward,A/fabs(A) * 15, pct);
+        else if(A-leftDrive.velocity(pct)>acc(leftDrive.velocity(pct))) leftDrive.spin(forward,leftDrive.velocity(pct)+acc(leftDrive.velocity(pct)), pct);
+        else if(A-leftDrive.velocity(pct)<-(leftDrive.velocity(pct))) leftDrive.spin(forward,leftDrive.velocity(pct)-acc(leftDrive.velocity(pct)), pct);
+        else */leftDrive.spin(forward,A*num,pct);
+        /*if(B==0) rightDrive.stop(coast);
+        else if(fabs(B)>fabs(rightDrive.velocity(pct)) && fabs(rightDrive.velocity(pct))<12) rightDrive.spin(forward,B/fabs(B) * 15, pct);
+        else if(B-rightDrive.velocity(pct)>acc(rightDrive.velocity(pct))) rightDrive.spin(forward,rightDrive.velocity(pct)+acc(rightDrive.velocity(pct)), pct);
+        else if(B-rightDrive.velocity(pct)<-acc(rightDrive.velocity(pct))) rightDrive.spin(forward,rightDrive.velocity(pct)-acc(rightDrive.velocity(pct)), pct);
+        else */rightDrive.spin(forward,B*num,pct);
+      }
+      if(A==0) leftDrive.stop(coast);
+      if(B==0) rightDrive.stop(coast);
     }
-    else if((A<=0 && B<=0) || (A>=0 && B>=0)){
-      leftDrive.spin(forward,A*num,pct);
-      rightDrive.spin(forward,B*num,pct);
-    }
-    if(Controller1.ButtonA.pressing()) intakeStack();
-    }
-    if(A==0)leftDrive.stop(coast);
-    if(B==0)rightDrive.stop(coast);
     wait(20, msec);
   }
 }

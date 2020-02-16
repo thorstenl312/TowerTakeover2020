@@ -3,13 +3,18 @@ float o;
 int z = 0;
 int count = 0;
 bool deployOut = false;
-bool skills = false;
+bool skills = true;
 bool fast = false;
 int deplo = 0;
 //Things or Multitasking
 motor_group leftDrive(FrontL, BackL);
 motor_group rightDrive(FrontR, BackR);
 motor_group roller(RollerL, RollerR);
+int acc(double cV){
+  double n= pow(1.5,fabs(cV));
+  if(n>35) n = 35;
+  return n;
+}
 void accelerate(int maxSpeed,int tim = 60){
   for(int i = 1; i<=maxSpeed/10; i++){
     leftDrive.spin(forward,i*10,pct);
@@ -154,7 +159,7 @@ void driveSpin(int speed){
 }
 void deployPIDAuton(double num = 1){
   deployOut = true;
-  double KP = 0.225*num;
+  double KP = 0.23*num;
   arm.stop(hold);
   int error = 30;
   if(dep.value(analogUnits::range12bit) >2000) rollOut(35);
@@ -214,8 +219,8 @@ void deployPID(double num =1){
   stopDrive(coast);
 }
 void deployPIDSkills(){
-  double KP = 0.225;
-  deploy.resetRotation();
+  double KP = 0.235;
+  //deploy.resetRotation();
   arm.stop(hold);
   int error = 30;
   deploy.spin(forward,100,rpm);
@@ -223,7 +228,7 @@ void deployPIDSkills(){
   while(abs(error)>5){
     error = 750 - deploy.rotation(degrees);
     double speed = error *KP;
-    if(speed < 40) speed = 40;
+    if(speed < 37) speed = 37;
     if(speed>80) speed = 100;
     if(error<410) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
@@ -231,7 +236,6 @@ void deployPIDSkills(){
   }
   deployOut = true;
   deploy.stop(hold);
-  
 }
 void deployRobot(){
   stopDrive(hold);
@@ -262,7 +266,7 @@ int armControl(){
     }
     else if(Controller1.ButtonL1.pressing() && arm.rotation(degrees)<200){
       task e(rollOut45);
-      arm.rotateTo(450,degrees,95,velocityUnits::pct,true);
+      arm.rotateTo(465,degrees,95,velocityUnits::pct,true);
       rollerSpin(0);
       task::stop(e);
     }
@@ -327,7 +331,16 @@ int armControl(){
       }
       else{
         if(skills){
-          deployPIDSkills();
+          if(deploy.rotation(deg)<210){
+            rollOut(35);
+            while(deploy.rotation(deg)<260){
+              deploy.spin(forward,90,pct);
+            }
+          deploy.stop(hold);
+          }
+          else{
+            deployPIDSkills();
+          }
         } 
         else deployPID();
       }

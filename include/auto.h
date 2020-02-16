@@ -1,5 +1,6 @@
 #include "spline.h"
 bool Red1 = false;
+bool old = true;
 void Auton(){
   if(Red1){
     deployRobotTask();
@@ -151,12 +152,13 @@ void Skills(){
   waitUntil(fabs(FrontL.velocity(percent))<1);
   RollerL.rotateFor(-500,degrees,50, velocityUnits::pct,false);
   RollerR.rotateFor(-500,degrees,50, velocityUnits::pct,true);
-  positiveXBackward(0,35,30);
+  positiveXBackward(-2,35,30);
   task a3(armDown);
+  positiveXBackward(0,35,30);
   wait(200,msec);
 
   //Deploy Cubes in Goal
-  turnRightO(-53,60,30);
+  turnRightO(-52,60,30);
   rollerSpin(60);
   arm.stop(hold);
   task::stop(a3);
@@ -215,6 +217,7 @@ void Skills(){
   //Go For 2nd Line of Cubes (STATE)
   rollerSpin(100);
   driveSpin(0);
+  if(old){
   negativeYForward(13,60,30);
   //Place 5th Cube in Tower
   rollerSpin(100);
@@ -256,7 +259,52 @@ void Skills(){
   driveSpin(-30);
   wait(600,msec);
   driveSpin(0);
-  rollerSpin(0);
+  rollerSpin(0);}
+
+  else{
+    negativeYForward(18,70,30);
+    //Place 5th Cube in Tower
+    rollerSpin(100);
+    wait(1000,msec);
+    stopDrive(hold);
+    task zO(rollOut80);
+    wait(150,msec);
+    arm.rotateTo(610,degrees,100,velocityUnits::pct,false);
+    task::stop(zO);
+    turnLeftO(60,30,35);
+    driveSpin(70);
+    wait(700,msec);
+    driveSpin(-45);
+    wait(300,msec);
+    stopDrive(hold);
+    RollerL.rotateFor(-600,degrees,50, velocityUnits::pct,false);
+    RollerR.rotateFor(-600,degrees,50, velocityUnits::pct,true);
+    task ip(armDown);
+    negativeYBackward(18,75,30);
+    //Deploy Stack In Goal
+    turnLeftO(30,30,70);
+    task::stop(ip);
+    positiveXForward(75,80,30);
+    turnRightO(140,30,70);
+    accelerate(80,30);
+    wait(400,msec);
+    stopDrive(coast);
+    while(BackR.velocity(rpm) > 5 && BackL.velocity(rpm) > 5) wait(20,msec);
+    arm.stop(hold);
+    deploy.spin(forward,100,pct);
+    rollOut(40);
+    arm.stop(hold);
+    stopDrive(hold);
+    deployPIDAuton(1);
+    wait(50,msec);
+    driveSpin(15);
+    rollerSpin(-100);
+    wait(250,msec);
+    driveSpin(-30);
+    wait(600,msec);
+    driveSpin(0);
+    rollerSpin(0);
+  }
 }
 
 

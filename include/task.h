@@ -220,22 +220,25 @@ void deployPID(double num =1){
 }
 void deployPIDSkills(){
   double KP = 0.235;
-  //deploy.resetRotation();
+  deploy.resetRotation();
   arm.stop(hold);
   int error = 30;
-  deploy.spin(forward,100,rpm);
+  deploy.spin(forward,60,rpm);
   rollOut(35);
   while(abs(error)>5){
     error = 750 - deploy.rotation(degrees);
     double speed = error *KP;
     if(speed < 37) speed = 37;
-    if(speed>80) speed = 100;
-    if(error<410) roller.stop(coast);
+    if(speed> 60) speed = 60;
+    if(error<300) roller.spin(reverse,15,pct);
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }
   deployOut = true;
   deploy.stop(hold);
+  rollerSpin(-100);
+  wait(150,msec);
+  rollerSpin(0);
 }
 void deployRobot(){
   stopDrive(hold);

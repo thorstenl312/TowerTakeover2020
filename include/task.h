@@ -12,7 +12,7 @@ motor_group rightDrive(FrontR, BackR);
 motor_group roller(RollerL, RollerR);
 int acc(double cV){
   double n= pow(1.5,fabs(cV));
-  if(n>35) n = 35;
+  if(n>30) n = 30;
   return n;
 }
 void accelerate(int maxSpeed,int tim = 60){
@@ -31,6 +31,13 @@ void stopDrive(brakeType b){
 void rollOut(int speed){
   roller.setStopping(hold);
   while(dep.value(analogUnits::range12bit) >2000){
+    roller.spin(reverse, speed,pct);
+  }
+  roller.stop(hold);
+}
+void rollOutA(int speed){
+  roller.setStopping(hold);
+  while(check.value(analogUnits::range12bit) >2000){
     roller.spin(reverse, speed,pct);
   }
   roller.stop(hold);
@@ -100,37 +107,44 @@ int armDown(){
   arm.spin(reverse,200,rpm);
       wait(250,msec);
       roller.spin(forward,45,pct);
-      while(fabs(arm.velocity(percent))>1){
-        wait(20,msec);
+      while(arm.rotation(degrees)>30){
+        arm.spin(reverse,200,rpm);
       }
+      while(fabs(arm.velocity(pct))>1) wait(20,msec);
       arm.resetRotation();
-      arm.spin(forward,170,rpm);
-      wait(100,msec);
+      arm.spin(forward,200,rpm);
+      wait(120,msec);
       arm.stop(hold);
       wait(100,msec);
+      roller.spin(forward,100,pct);
   return(0);
 }
 int armDown2(){
-  roller.stop(coast);
-  arm.spin(reverse,100,percent);
-  while(fabs(arm.velocity(percent))>1){
-    wait(20,msec);
-  }
-  roller.spin(forward,100,pct);
-  arm.spin(forward,170,rpm);
-  wait(100,msec);
-  arm.stop(hold);
+  wait(500,msec);
+  arm.spin(reverse,200,rpm);
+      wait(250,msec);
+      roller.spin(forward,45,pct);
+      while(arm.rotation(degrees)>30){
+        arm.spin(reverse,200,rpm);
+      }
+      while(fabs(arm.velocity(pct))>1) wait(20,msec);
+      arm.resetRotation();
+      arm.spin(forward,200,rpm);
+      wait(120,msec);
+      arm.stop(hold);
+      wait(100,msec);
+      roller.spin(forward,100,pct);
   return(0);
 }
 int rollerControl(){
   while(true){
-    if(Controller1.ButtonR1.pressing() && arm.rotation(degrees)<200){
+    if(Controller1.ButtonR1.pressing() && arm.rotation(degrees)<360){
       while(Controller1.ButtonR1.pressing()){
         roller.spin(forward,100,pct);
       }
       roller.stop(hold);
     }
-    else if(Controller1.ButtonR1.pressing() && arm.rotation(degrees)>200){
+    else if(Controller1.ButtonR1.pressing() && arm.rotation(degrees)>360){
       while(Controller1.ButtonR1.pressing()){
         roller.spin(reverse,60,pct);
       }
@@ -170,7 +184,7 @@ void deployPIDAuton(double num = 1){
     double speed = error *KP;
     if(speed < 30) speed = 30;
     //else if (speed<30) speed = 50;
-    if(error<400) roller.stop(coast);
+    if(error<450) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }
@@ -220,24 +234,23 @@ void deployPID(double num =1){
 }
 void deployPIDSkills(){
   double KP = 0.235;
-  deploy.resetRotation();
+  //deploy.resetRotation();
   arm.stop(hold);
   int error = 30;
-  deploy.spin(forward,60,rpm);
-  rollOut(35);
+  if(deploy.rotation(deg)<150) rollOut(40);
   while(abs(error)>5){
     error = 750 - deploy.rotation(degrees);
     double speed = error *KP;
-    if(speed < 37) speed = 37;
-    if(speed> 60) speed = 60;
-    if(error<300) roller.spin(reverse,15,pct);
+    if(speed < 38) speed = 38;
+    if(error<350) {
+      roller.stop(coast);
+      deployOut = true;
+    }
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }
   deployOut = true;
   deploy.stop(hold);
-  rollerSpin(-100);
-  wait(150,msec);
   rollerSpin(0);
 }
 void deployRobot(){
@@ -297,16 +310,15 @@ int armControl(){
       roller.stop(coast);
     }
     else if(Controller1.ButtonDown.pressing()){
-      rollerSpin(100);
-      arm.rotateFor(180, rotationUnits::deg,100, velocityUnits::pct,true);
-      wait(150,msec);
-      while(arm.rotation(degrees)>30){
-        arm.spin(reverse,150,rpm);
+      rollOutA(35);
+      roller.stop(hold);
+      while(deploy.rotation(deg)<180){
+        deploy.spin(forward,90,rpm);
       }
-      while(fabs(arm.velocity(pct))>1) wait(20,msec);
-      arm.stop(hold);
-      arm.resetRotation();
-      rollerSpin(0);
+      while(deploy.rotation(deg)<270){
+        deploy.spin(forward,45,rpm);
+      }
+      deploy.stop(hold);
     }
     else{
       arm.stop(hold);
@@ -334,16 +346,7 @@ int armControl(){
       }
       else{
         if(skills){
-          if(deploy.rotation(deg)<210){
-            rollOut(35);
-            while(deploy.rotation(deg)<260){
-              deploy.spin(forward,90,pct);
-            }
-          deploy.stop(hold);
-          }
-          else{
-            deployPIDSkills();
-          }
+          deployPIDSkills();
         } 
         else deployPID();
       }

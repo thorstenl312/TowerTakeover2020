@@ -22,6 +22,7 @@ encoder encoderY = encoder(Brain.ThreeWirePort.E);
 encoder encoderR = encoder(Brain.ThreeWirePort.A);
 
 controller Controller1 = controller(primary);
+controller partnerC = controller(partner);
 line check = line(Brain.ThreeWirePort.G);
 line dep = line(Brain.ThreeWirePort.H);
 // VEXcode generated functions

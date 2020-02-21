@@ -182,9 +182,9 @@ void deployPIDAuton(double num = 1){
     stopDrive(hold);
     error = 750 - deploy.rotation(degrees);
     double speed = error *KP;
-    if(speed < 30) speed = 30;
+    if(speed < 35) speed = 35;
     //else if (speed<30) speed = 50;
-    if(error<450) roller.stop(coast);
+    if(error<400) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }
@@ -233,15 +233,22 @@ void deployPID(double num =1){
   stopDrive(coast);
 }
 void deployPIDSkills(){
-  double KP = 0.235;
+  double KP = 0.23;
+  int min = 38;
   //deploy.resetRotation();
   arm.stop(hold);
   int error = 30;
-  if(deploy.rotation(deg)<150) rollOut(40);
+  /*if(deploy.rotation(deg)>30){
+    KP = 0.225;
+    min = 30;
+  }*/
+  if(deploy.rotation(deg) <150)deploy.spin(forward,80,rpm);
+  rollOut(40);
   while(abs(error)>5){
     error = 750 - deploy.rotation(degrees);
     double speed = error *KP;
-    if(speed < 38) speed = 38;
+    if(speed < min) speed = min;
+    if(speed>75) speed = 100;
     if(error<350) {
       roller.stop(coast);
       deployOut = true;
@@ -274,7 +281,7 @@ void deployRobotTask(){
 }
 int armControl(){
   while(true){
-    if(Controller1.ButtonRight.pressing()){
+    if((partnerC.ButtonA.pressing()&&Controller1.ButtonL1.pressing()) || Controller1.ButtonRight.pressing()){
       task d(rollOut45);
       arm.rotateTo(610,degrees,95,velocityUnits::pct,true);
       rollerSpin(0);
@@ -309,8 +316,12 @@ int armControl(){
       wait(100,msec);
       roller.stop(coast);
     }
-    else if(Controller1.ButtonDown.pressing()){
-      rollOutA(35);
+    else{
+      arm.stop(hold);
+    }
+    if(Controller1.ButtonDown.pressing() || partnerC.ButtonR1.pressing()){
+      if(deploy.rotation(deg)<150){
+      rollOutA(30);
       roller.stop(hold);
       while(deploy.rotation(deg)<180){
         deploy.spin(forward,90,rpm);
@@ -319,13 +330,17 @@ int armControl(){
         deploy.spin(forward,45,rpm);
       }
       deploy.stop(hold);
+      }
+      else{
+        rollerSpin(0);
+      }
     }
-    else{
-      arm.stop(hold);
-    }
-    if(Controller1.ButtonUp.pressing()){
-      while(Controller1.ButtonUp.pressing()){
-        deploy.spin(forward,35,rpm);
+    else if(Controller1.ButtonUp.pressing() || partnerC.ButtonR2.pressing()){
+      if(partnerC.ButtonR2.pressing()){
+        if(check.value(analogUnits::range12bit) >2200 && partnerC.ButtonR2.pressing() && deploy.rotation(deg)<30) rollOutA(35);
+      }
+      while(Controller1.ButtonUp.pressing() || partnerC.ButtonR2.pressing()){
+        deploy.spin(forward,30,rpm);
       }
       deploy.stop(hold);
     }

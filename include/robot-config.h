@@ -14,6 +14,7 @@ extern encoder encoderR;
 extern motor RollerR;
 extern motor RollerL;
 extern controller Controller1;
+extern controller partnerC;
 extern motor deploy;
 extern inertial inert;
 extern line check;

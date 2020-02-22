@@ -5,7 +5,7 @@
 #define kpOT 0.6///79
 #define kdOT 0.04
 #define kiOT 0.00008
-#define kpOC 0.47
+#define kpOC 0.485
 #define kdOC 0.00
 #define kiOC 0.025
 void positiveYForward(float pos, int maxPower = 75, int tim = 150) {

@@ -15,10 +15,10 @@ void splineLeft(float firstAngle, float X, int speed, int speed2){
   stopDrive(brake);
   double error = 30;
   while(error>2){
-    error = fabs(Q)-4;
+    error = fabs(Q)-3;
     int zoom = error*2.4;
-    if(zoom<=50){
-      zoom = 50;
+    if(zoom<=55){
+      zoom = 55;
     }
     rightDrive.stop(brake);
     leftDrive.spin(reverse,zoom,rpm);
@@ -38,7 +38,7 @@ void splineRight(float firstAngle, float X, int speed, int speed2){
   stopDrive(brake);
   int error = 30;
   while(error>2){
-    error = fabs(Q)-0.7;
+    error = fabs(Q)-0.4;
     int zoom = error*2.4;
     if(zoom<=50){
       zoom = 50;

@@ -3,7 +3,7 @@ float o;
 int z = 0;
 int count = 0;
 bool deployOut = false;
-bool skills = true;
+bool skills = false;
 bool fast = false;
 int deplo = 0;
 //Things or Multitasking
@@ -233,8 +233,8 @@ void deployPID(double num =1){
   stopDrive(coast);
 }
 void deployPIDSkills(){
-  double KP = 0.23;
-  int min = 38;
+  double KP = 0.22;
+  int min = 43;
   //deploy.resetRotation();
   arm.stop(hold);
   int error = 30;

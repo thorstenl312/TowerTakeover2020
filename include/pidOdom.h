@@ -2,12 +2,12 @@
 #define kpO 0.23
 #define kdO 0.04
 #define kiO 0.01
-#define kpOT 0.6///79
+#define kpOT 0.65///79
 #define kdOT 0.04
 #define kiOT 0.00008
-#define kpOC 0.485
+#define kpOC 0.52
 #define kdOC 0.00
-#define kiOC 0.025
+#define kiOC 0.035
 void positiveYForward(float pos, int maxPower = 75, int tim = 150) {
 	float dif,error, lasterror = pos, totalerror = 0, t = 0, speed = 0, turnCorrection = 0, Power=30;
 	while (t<tim) {

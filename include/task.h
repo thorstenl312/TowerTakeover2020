@@ -3,7 +3,7 @@ float o;
 int z = 0;
 int count = 0;
 bool deployOut = false;
-bool skills = false;
+bool skills = true;
 bool fast = false;
 int deplo = 0;
 //Things or Multitasking
@@ -80,11 +80,11 @@ int rollIn80(){
 int deployIn(){
   roller.stop(coast);
   deploy.spin(reverse,100,velocityUnits::pct);
-  wait(300,msec);
+  wait(500,msec);
+  deploy.stop(coast);
   while(fabs(deploy.velocity(percent))>1){
     wait(20,msec);
   }
-  roller.spin(forward,80,pct);
   deploy.resetRotation();
   wait(50,msec);
   deploy.stop(coast);

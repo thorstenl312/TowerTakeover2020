@@ -31,7 +31,7 @@ int trackPosition()
 	double h; // The hypotenuse of the triangle formed by the middle of the robot on the starting position and ending position and the middle of the circle it travels around
 	double i; // Half on the angle that I've traveled
 	double h2; // The same as h but using the back instead of the side wheels
-	a = ((L - R) / (L_DISTANCE_IN + R_DISTANCE_IN))*1.01; // The angle that I've traveled
+	a = ((L - R) / (L_DISTANCE_IN + R_DISTANCE_IN))*1.0; // The angle that I've traveled
 	if (a)
 	{
 		double r = R / a; // The radius of the circle the robot travel's around with the right side of the robot

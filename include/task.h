@@ -30,7 +30,7 @@ void stopDrive(brakeType b){
 }
 void rollOut(int speed){
   roller.setStopping(hold);
-  while(dep.value(analogUnits::range12bit) >2000){
+  while(dep.value(analogUnits::range12bit) >1800){
     roller.spin(reverse, speed,pct);
   }
   roller.stop(hold);
@@ -78,7 +78,6 @@ int rollIn80(){
   return(0);
 }
 int deployIn(){
-  roller.stop(coast);
   deploy.spin(reverse,100,velocityUnits::pct);
   wait(500,msec);
   deploy.stop(coast);
@@ -120,7 +119,7 @@ int armDown(){
   return(0);
 }
 int armDown2(){
-  wait(500,msec);
+  wait(300,msec);
   arm.spin(reverse,200,rpm);
       wait(250,msec);
       roller.spin(forward,45,pct);
@@ -180,7 +179,7 @@ void deployPIDAuton(double num = 1){
   roller.stop(hold);
   while(abs(error)>5){
     stopDrive(hold);
-    error = 750 - deploy.rotation(degrees);
+    error = 760 - deploy.rotation(degrees);
     double speed = error *KP;
     if(speed < 35) speed = 35;
     //else if (speed<30) speed = 50;
@@ -221,7 +220,7 @@ void deployPID(double num =1){
   roller.stop(hold);
   while(abs(error)>5){
     stopDrive(hold);
-    error = 750 - deploy.rotation(degrees);
+    error = 760 - deploy.rotation(degrees);
     double speed = error *KP;
     if(speed < 30) speed = 30;
     //else if (speed<30) speed = 50;
@@ -245,7 +244,7 @@ void deployPIDSkills(){
   if(deploy.rotation(deg) <150)deploy.spin(forward,80,rpm);
   rollOut(40);
   while(abs(error)>5){
-    error = 750 - deploy.rotation(degrees);
+    error = 760 - deploy.rotation(degrees);
     double speed = error *KP;
     if(speed < min) speed = min;
     if(speed>75) speed = 100;
@@ -270,8 +269,9 @@ void deployRobot(){
   arm.resetRotation();
 }
 void deployRobotTask(){
+  arm.resetRotation();
   stopDrive(hold);
-  arm.rotateFor(300,degrees,100,velocityUnits::pct);
+  arm.rotateFor(220,degrees,100,velocityUnits::pct);
   while(arm.rotation(degrees)>30){
     arm.spin(reverse,100,pct);
   }

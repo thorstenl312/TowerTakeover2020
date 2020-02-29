@@ -119,7 +119,7 @@ int armDown(){
   return(0);
 }
 int armDown2(){
-  wait(300,msec);
+  wait(200,msec);
   arm.spin(reverse,200,rpm);
       wait(250,msec);
       roller.spin(forward,45,pct);
@@ -183,7 +183,7 @@ void deployPIDAuton(double num = 1){
     double speed = error *KP;
     if(speed < 35) speed = 35;
     //else if (speed<30) speed = 50;
-    if(error<400) roller.stop(coast);
+    if(error<370) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }

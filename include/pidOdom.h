@@ -2,9 +2,9 @@
 #define kpO 0.23
 #define kdO 0.04
 #define kiO 0.01
-#define kpOT 0.55///79
+#define kpOT 0.53///79
 #define kdOT 0.1
-#define kiOT 0.0005
+#define kiOT 0.0008
 #define kpOC 0.52
 #define kdOC 0.00
 #define kiOC 0.035

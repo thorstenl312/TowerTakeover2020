@@ -38,7 +38,7 @@ void splineRight(float firstAngle, float X, int speed, int speed2){
   stopDrive(brake);
   int error = 30;
   while(error>3){
-    error = fabs(Q)-2;
+    error = fabs(Q)-1;
     int zoom = error*2.5;
     if(zoom<=55){
       zoom = 55;

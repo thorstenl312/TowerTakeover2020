@@ -15,7 +15,7 @@ motor BackR = motor(PORT20, ratio18_1, true);
 motor BackL = motor(PORT19, ratio18_1, false);
 motor FrontR = motor(PORT17, ratio18_1, true);
 motor RollerL = motor(PORT14, ratio18_1, false);
-motor RollerR = motor(PORT11, ratio18_1, true);
+motor RollerR = motor(PORT1, ratio18_1, true);
 
 encoder encoderL = encoder(Brain.ThreeWirePort.C);
 encoder encoderY = encoder(Brain.ThreeWirePort.E);

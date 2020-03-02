@@ -58,7 +58,7 @@ int rollOutDep(){
 }
 int rollOut45(){
   while(check.value(analogUnits::range12bit) >2400){
-    roller.spin(reverse, 45,pct);
+    roller.spin(reverse, 60,pct);
   }
   roller.stop(hold);
   return(0);
@@ -243,12 +243,13 @@ void deployPIDSkills(){
   }*/
   if(deploy.rotation(deg) <150)deploy.spin(forward,80,rpm);
   rollOut(40);
+  roller.stop(hold);
   while(abs(error)>5){
     error = 760 - deploy.rotation(degrees);
     double speed = error *KP;
     if(speed < min) speed = min;
     if(speed>75) speed = 100;
-    if(error<350) {
+    if(error<320) {
       roller.stop(coast);
       deployOut = true;
     }
@@ -335,11 +336,24 @@ int armControl(){
         rollerSpin(0);
       }
     }
-    else if(Controller1.ButtonUp.pressing() || partnerC.ButtonR2.pressing()){
-      if(partnerC.ButtonR2.pressing()){
-        if(check.value(analogUnits::range12bit) >2200 && partnerC.ButtonR2.pressing() && deploy.rotation(deg)<30) rollOutA(35);
+    else if(partnerC.ButtonR2.pressing()){
+      if(deploy.rotation(deg)<150){
+      rollOut(30);
+      roller.stop(hold);
+      while(deploy.rotation(deg)<180){
+        deploy.spin(forward,90,rpm);
       }
-      while(Controller1.ButtonUp.pressing() || partnerC.ButtonR2.pressing()){
+      while(deploy.rotation(deg)<270){
+        deploy.spin(forward,45,rpm);
+      }
+      deploy.stop(hold);
+      }
+      else{
+        rollerSpin(0);
+      }
+    }
+    else if(Controller1.ButtonUp.pressing()){
+      while(Controller1.ButtonUp.pressing()){
         deploy.spin(forward,30,rpm);
       }
       deploy.stop(hold);

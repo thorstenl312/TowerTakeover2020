@@ -18,11 +18,11 @@ void Auton(){
     while(fabs(arm.velocity(pct))>1) wait(20,msec);
     arm.stop(hold);
     arm.resetRotation();
-    splineRight(-30, 9.6, 200, 30); 
+    splineRight(-30, 9.4, 200, 30); 
     positiveYForward(46,55,30);
     rollerSpin(100);
-    negativeYBackward(18.6,60,30);
-    turnRightO(128,30);
+    negativeYBackward(20,70,30);
+    turnRightO(125,30);
     roller.spin(forward,100,pct);
     accelerate(100,30);
     wait(190,msec);
@@ -47,7 +47,7 @@ void Auton(){
     wait(400,msec);
     arm.stop(hold);
     roller.spin(forward,100,pct);
-    positiveYForward(23.8,65,30);
+    positiveYForward(23.6,65,30);
     wait(100,msec);
     arm.rotateFor(180, rotationUnits::deg,100, velocityUnits::pct,false);
     positiveYForward(28,45,30);
@@ -57,12 +57,12 @@ void Auton(){
     while(fabs(arm.velocity(pct))>1) wait(20,msec);
     arm.stop(hold);
     arm.resetRotation();
-    splineLeft(28, -9.7, 200, 30); 
+    splineLeft(27, -9.7, 200, 30); 
     positiveYForward(46,60,30);
     rollerSpin(100);
-    negativeYBackward(22.1,70,30);
+    negativeYBackward(25,70,30);
     rollerSpin(40);
-    turnLeftO(-127,30);
+    turnLeftO(-125,30);
     roller.spin(forward,100,pct);
     accelerate(100,30);
     wait(250,msec);
@@ -102,7 +102,7 @@ void Skills(){
   arm.stop(hold);
   arm.spin(reverse,30,rpm);
   task a(rollIn80);
-  positiveYForward(7.5,50,30);
+  positiveYForward(7.2,50,30);
   arm.stop(hold);
   turnLeftO(-43,90,40);
   task::stop(a);
@@ -112,7 +112,7 @@ void Skills(){
   RollerL.rotateFor(-500,degrees,60, velocityUnits::pct,false);
   RollerR.rotateFor(-500,degrees,60, velocityUnits::pct,true);
   task ar(armDown2);
-  positiveXBackward(-1.8,50,30);
+  positiveXBackward(-1.6,50,30);
 
   //Get First Line of Cubes
   turnRightO(-0.7,70,40);
@@ -123,7 +123,6 @@ void Skills(){
 
   //Put 2nd Cube in Tower
   rollerSpin(100);
-  wait(300,msec);
   task e(rollOut45);
   arm.rotateTo(480,degrees,95,velocityUnits::pct,true);
   turnRightO(25,30);
@@ -132,17 +131,18 @@ void Skills(){
 
   //Get 2nd Line of Cubes
   rollerSpin(100);
-  turnLeftO(0,30,40);
+  turnLeftO(-0.5,30,40);
   task a2(armDown);
   driveSpin(-40);
-  wait(150,msec);
+  wait(100,msec);
   positiveYForward(103,45,30);
   rollerSpin(100);
-  wait(1700,msec);
+  wait(1500,msec);
   task::stop(ar);
 
   //Get 3rd Cube in Tower
   task g(rollOut45);
+  wait(75,msec);
   arm.rotateTo(480,degrees,100,velocityUnits::pct,true);
   task::stop(g);
   turnLeftO9(-91.5,30);
@@ -152,16 +152,14 @@ void Skills(){
   waitUntil(fabs(FrontL.velocity(percent))<1);
   RollerL.rotateFor(-500,degrees,50, velocityUnits::pct,false);
   RollerR.rotateFor(-500,degrees,50, velocityUnits::pct,true);
-  driveSpin(-30);
-  wait(180,msec);
   stopDrive(coast);
-  task a3(armDown);
+  task a3(armDown2);
   positiveXBackward(0,35,30);
   
   while(fabs(arm.velocity(pct))>5) wait(20,msec);
 
   //Deploy Cubes in Goal
-  turnRightO(-49,30,35);
+  turnRightO(-46,30,35);
   rollerSpin(60);
   arm.stop(hold);
   task::stop(a3);
@@ -176,30 +174,26 @@ void Skills(){
   rollOut(40);
   arm.stop(hold);
   stopDrive(hold);
-  deployPIDAuton(0.9);
+  deployPIDAuton(1);
   arm.stop(hold);
-  wait(100,msec);
   rollerSpin(-100);
-  wait(250,msec);
+  wait(200,msec);
   driveSpin(-25);
   wait(300,msec);
-  driveSpin(0);
-  wait(150,msec);
 
   //Go for 4th cube in Tower
-  negativeYBackward(110.7,50,60);
+  negativeYBackward(110.4,50,50);
   rollerSpin(60);
-  turnRightO(83,30,40,1.6,1.15);
+  turnRightO(80,30,40,1.7,1.3);
   driveSpin(-50);
   wait(250,msec);
   while(fabs(BackR.velocity(rpm)) > 5 && fabs(BackL.velocity(rpm)) > 5 && fabs(FrontL.velocity(rpm)) > 5 && fabs(FrontR.velocity(rpm)) > 5) wait(20,msec);
-  wait(150,msec);
   rollerSpin(60);
   task d(deployIn);
-  positiveXForward(29,55,30);
+  positiveXForward(30,55,30);
   stopDrive(hold);
   wait(150,msec);
-  negativeXBackward(26,45,30);
+  negativeXBackward(27,45,30);
   task z(rollOut45);
   wait(150,msec);
   arm.rotateTo(615,degrees,100,velocityUnits::pct);
@@ -207,31 +201,30 @@ void Skills(){
   driveSpin(20);
   wait(30,msec);
   driveSpin(50);
-  wait(470,msec);
+  wait(450,msec);
   stopDrive(coast);
   wait(350,msec);
   driveSpin(-20);
   wait(30,msec);
   driveSpin(-50);
-  wait(270,msec);
+  wait(230,msec);
   stopDrive(hold);
   RollerL.rotateFor(-600,degrees,45, velocityUnits::pct,false);
   RollerR.rotateFor(-600,degrees,45, velocityUnits::pct,true);
   stopDrive(hold);
-  turnRightO(188,30,50,1.2,1.05);
+  turnRightO(175,30,50,1.2,1.05);
   driveSpin(-80);
   wait(250,msec);
   task a4(armDown);
   while(fabs(BackR.velocity(rpm)) > 5 && fabs(BackL.velocity(rpm)) > 5 && fabs(FrontL.velocity(rpm)) > 5 && fabs(FrontR.velocity(rpm)) > 5) wait(20,msec);
-  stopDrive(coast);
-  wait(150,msec);  
+  stopDrive(coast); 
   task::stop(a4);
   arm.stop(hold);
   
   //Go For 2nd Line of Cubes (STATE)
   rollerSpin(100);
   driveSpin(0);
-  negativeYForward(40,55,30);
+  negativeYForward(40,65,30);
   //Place 5th Cube in Tower
   rollerSpin(100);
   wait(600,msec);
@@ -240,7 +233,7 @@ void Skills(){
   task zO(rollOut80);
   wait(75,msec);
   arm.rotateTo(610,degrees,100,velocityUnits::pct,true);
-  turnLeftO(118,30);
+  turnLeftO(116,30);
   driveSpin(70);
   wait(500,msec);
   stopDrive(coast);
@@ -252,28 +245,28 @@ void Skills(){
   RollerR.rotateFor(-600,degrees,45, velocityUnits::pct,true);
 
   //Get more cubes
-  turnLeftO(35,30);
-  task ip(armDown);
-  wait(250,msec);
+  task ip(armDown2);
+  turnLeftO(35,30,65);
   while(fabs(arm.velocity(pct))>5) wait(20,msec);
-  positiveYForward(54,45,30);
-  turnRightO(80,30,30);
-  positiveXForward(83,55,30);
+  positiveYForward(56,80,30);
+  turnRightO(73,30,65);
+  arm.spin(reverse,20,pct);
+  positiveXForward(95,80,30);
 
   //Deploy Stack In Goal
-  turnRightO(120,30,70);
+  turnRightO(116,30,75);
   accelerate(100,30);
-  wait(200,msec);
+  wait(660,msec);
   stopDrive(coast);
   while(fabs(BackR.velocity(rpm)) > 5 && fabs(BackL.velocity(rpm)) > 5 && fabs(FrontL.velocity(rpm)) > 5 && fabs(FrontR.velocity(rpm)) > 5) wait(20,msec);
   arm.stop(hold);
   rollerSpin(100);
-  deploy.spin(forward,50,rpm);
+  wait(150, msec);
+  deploy.spin(forward,70,rpm);
   rollOut(40);
   arm.stop(hold);
   stopDrive(hold);
   deployPIDAuton(1);
-  wait(50,msec);
   driveSpin(15);
   rollerSpin(-100);
   wait(200,msec);

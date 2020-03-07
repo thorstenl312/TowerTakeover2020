@@ -14,8 +14,8 @@ void splineLeft(float firstAngle, float X, int speed, int speed2){
   }
   stopDrive(brake);
   double error = 30;
-  while(error>4.2){
-    error = fabs(Q)-1.5;
+  while(error>4.5){
+    error = fabs(Q)-2;
     int zoom = error*2.5;
     if(zoom<=55){
       zoom = 55;

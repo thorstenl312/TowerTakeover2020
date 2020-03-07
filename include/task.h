@@ -30,7 +30,7 @@ void stopDrive(brakeType b){
 }
 void rollOut(int speed){
   roller.setStopping(hold);
-  while(dep.value(analogUnits::range12bit) >1800){
+  while(dep.value(analogUnits::range12bit) >1800 && deploy.rotation(deg)<450){
     roller.spin(reverse, speed,pct);
   }
   roller.stop(hold);
@@ -118,8 +118,23 @@ int armDown(){
       roller.spin(forward,100,pct);
   return(0);
 }
-int armDown2(){
+int armDown3(){
   wait(200,msec);
+  arm.spin(reverse,200,rpm);
+      wait(250,msec);
+      roller.spin(forward,45,pct);
+      while(arm.rotation(degrees)>30){
+        arm.spin(reverse,200,rpm);
+      }
+      while(fabs(arm.velocity(pct))>1) wait(20,msec);
+      arm.resetRotation();
+      arm.stop(hold);
+      wait(100,msec);
+      roller.spin(forward,100,pct);
+  return(0);
+}
+int armDown2(){
+  wait(50,msec);
   arm.spin(reverse,200,rpm);
       wait(250,msec);
       roller.spin(forward,45,pct);
@@ -170,7 +185,7 @@ void driveSpin(int speed){
   leftDrive.spin(forward, speed, percent);
   rightDrive.spin(forward, speed, percent);
 }
-void deployPIDAuton(double num = 1){
+void deployPIDAuton(double num = 1, int drop =390){
   deployOut = true;
   double KP = 0.23*num;
   arm.stop(hold);
@@ -183,7 +198,7 @@ void deployPIDAuton(double num = 1){
     double speed = error *KP;
     if(speed < 35) speed = 35;
     //else if (speed<30) speed = 50;
-    if(error<370) roller.stop(coast);
+    if(error<drop) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }
@@ -223,6 +238,7 @@ void deployPID(double num =1){
     error = 760 - deploy.rotation(degrees);
     double speed = error *KP;
     if(speed < 30) speed = 30;
+    if(speed>90) speed = 90;
     //else if (speed<30) speed = 50;
     if(error<410) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
@@ -249,7 +265,7 @@ void deployPIDSkills(){
     double speed = error *KP;
     if(speed < min) speed = min;
     if(speed>75) speed = 100;
-    if(error<320) {
+    if(error<350) {
       roller.stop(coast);
       deployOut = true;
     }

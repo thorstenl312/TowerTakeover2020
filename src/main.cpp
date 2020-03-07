@@ -17,6 +17,12 @@ int b=5; //Auton Selection based on number
 competition Competition;
 
 void pre_auton(void) {
+  task check(debug);
+  task Odom(trackPosition);
+  Brain.Screen.setFont(mono60);
+  if(skills) Brain.Screen.printAt(100, 100,"SKILLS");
+  else if(Red1) Brain.Screen.printAt(100, 100,"RED");
+  else Brain.Screen.printAt(100, 100,"BLUE");
   deploy.resetRotation();
   arm.resetRotation();
   encoderL.resetRotation();
@@ -30,10 +36,6 @@ void pre_auton(void) {
 void autonomous(void) {
   roller.setMaxTorque(100, pct);
   //rollerSpin(-80);
-  task Odom(trackPosition);
-  resetPosition();
-  task check(debug);
-  resetPosition();
   deploy.stop(coast);
   if(skills) Skills();
   else Auton();

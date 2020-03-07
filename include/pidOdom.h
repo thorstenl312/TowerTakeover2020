@@ -2,9 +2,9 @@
 #define kpO 0.23
 #define kdO 0.04
 #define kiO 0.01
-#define kpOT 0.53///79
+#define kpOT 0.58///79
 #define kdOT 0.1
-#define kiOT 0.0008
+#define kiOT 0.001
 #define kpOC 0.52
 #define kdOC 0.00
 #define kiOC 0.035
@@ -244,7 +244,7 @@ void turnRightO9(float pos, int tim = 100, int maxSpeed = 50) {
   stopDrive(hold);
   wait(150,msec);
 }
-void turnLeftO(float pos, int tim = 250, int maxSpeed = 50) {
+void turnLeftO(float pos, int tim = 250, int maxSpeed = 50, bool lowS = false, int s = 20) {
 	float error = 300, lasterror = pos, totalerror = 0, t=0, Power= 10;
   //Clears the encoder
 	while (t<tim) {
@@ -257,6 +257,7 @@ void turnLeftO(float pos, int tim = 250, int maxSpeed = 50) {
 		float P = error * kpOT, D = derivative * kdOT, I = totalerror * kiOT;
     Power=P+I+D;
     if(Power>=maxSpeed)Power=maxSpeed;
+    if(lowS && Power<s) Power=s; 
 		FrontR.spin(forward, Power, percent);
 		BackR.spin(forward, Power, percent);
     FrontL.spin(reverse, Power, percent);
@@ -274,7 +275,7 @@ void turnLeftO(float pos, int tim = 250, int maxSpeed = 50) {
 	//Stops motor to ensure accuracy
   stopDrive(coast);
 }
-void turnRightO(float pos, int tim = 250, int maxSpeed = 50, double n = 1, double m =1) {
+void turnRightO(float pos, int tim = 250, int maxSpeed = 50, double n = 1, double m =1, bool lowS = false, int s = 20) {
 	float error = 300, lasterror = pos, totalerror = 0, t=0, Power= 10;
   //Clears the encoder
 	while (t<tim) {
@@ -287,6 +288,7 @@ void turnRightO(float pos, int tim = 250, int maxSpeed = 50, double n = 1, doubl
 		float P = error * kpOT*m, D = derivative * kdOT*m, I = totalerror * kiOT *n;
     Power=P+I+D;
     if(Power>maxSpeed)Power=maxSpeed;
+    if(lowS && Power<s) Power=s;
 		FrontR.spin(reverse, Power, percent);
 		BackR.spin(reverse, Power, percent);
     FrontL.spin(forward, Power, percent);

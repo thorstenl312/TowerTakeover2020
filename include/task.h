@@ -3,7 +3,7 @@ float o;
 int z = 0;
 int count = 0;
 bool deployOut = false;
-bool skills = true;
+bool skills = false;
 bool fast = false;
 int deplo = 0;
 //Things or Multitasking
@@ -231,7 +231,7 @@ void deployPID(double num =1){
   deploy.resetRotation();
   arm.stop(hold);
   int error = 30;
-  if(dep.value(analogUnits::range12bit) >2000) rollOut(35);
+  if(dep.value(analogUnits::range12bit) >2000) rollOut(25);
   roller.stop(hold);
   while(abs(error)>5){
     stopDrive(hold);
@@ -240,7 +240,7 @@ void deployPID(double num =1){
     if(speed < 30) speed = 30;
     if(speed>90) speed = 90;
     //else if (speed<30) speed = 50;
-    if(error<410) roller.stop(coast);
+    if(error<380) roller.stop(coast);
     deploy.spin(forward, speed, rpm);
     wait(15,msec);
   }

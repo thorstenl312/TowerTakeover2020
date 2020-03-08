@@ -77,10 +77,10 @@ void usercontrol(void) {
     if(deployOut){
       if(yAxis<0 || xAxis<0){
         rollerSpin(-100);
-        driveSpin(-20*num);
+        driveSpin(-24);
       }
       else if(yAxis>0 || xAxis>0){
-        driveSpin(15);
+        driveSpin(18);
       }
       else{
         driveSpin(0);
